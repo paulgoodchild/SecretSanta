@@ -1,0 +1,36 @@
+---
+
+rules:
+  presents_each: 3
+  attempts_limit: 1000
+  print: true
+
+people:
+  - "test1@paul"
+  - "test2@paul"
+  - "test3@paul"
+  - "test4@paul"
+  - "test5@paul"
+  - "test6@paul"
+  - "test7@paul"
+  - "test8@paul"
+  - "test9@paul"
+  - "test10@paul"
+
+exclusion_sets:
+  -
+    - "test1@paul"
+    - "test2@paul"
+  -
+    - "test9@paul"
+    - "test1@paul"
+    - "test3@paul"
+  -
+    - "test7@paul"
+    - "test4@paul"
+  -
+    - "test6@paul"
+    - "test8@paul"
+  -
+    - "test6@paul"
+    - "test7@paul"
