@@ -1,10 +1,8 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Config;
 
-use Symfony\Component\Yaml\Yaml;
-
-class Config {
+class VO {
 
 	/**
 	 * @var array

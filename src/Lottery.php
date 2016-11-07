@@ -2,7 +2,10 @@
 
 namespace Apto\Fun\SecretSanta;
 
-class Secret {
+use Apto\Fun\SecretSanta\Components\Person;
+use Apto\Fun\SecretSanta\Config\ConfigConsumer;
+
+class Lottery {
 
 	use ConfigConsumer;
 

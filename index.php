@@ -4,9 +4,9 @@ require( __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'
 
 $sPathToConfig = __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.yml';
 $aConfig = ( new \Symfony\Component\Yaml\Yaml() )->parse( file_get_contents( $sPathToConfig ) );
-$oConfig = new \Apto\Fun\SecretSanta\Config( $aConfig );
+$oConfig = new \Apto\Fun\SecretSanta\Config\VO( $aConfig );
 
-$aPeople = ( new \Apto\Fun\SecretSanta\Secret() )
+$aPeople = ( new \Apto\Fun\SecretSanta\Lottery() )
 	->setConfig( $oConfig )
 	->run()
 	->getEveryone();

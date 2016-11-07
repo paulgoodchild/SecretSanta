@@ -2,6 +2,8 @@
 
 namespace Apto\Fun\SecretSanta;
 
+use Apto\Fun\SecretSanta\Components\Person;
+
 class Printer {
 
 	/**

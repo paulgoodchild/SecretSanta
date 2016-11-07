@@ -2,6 +2,9 @@
 
 namespace Apto\Fun\SecretSanta;
 
+use Apto\Fun\SecretSanta\Components\Person;
+use Apto\Fun\SecretSanta\Config\ConfigConsumer;
+
 class Verify {
 
 	use ConfigConsumer;

@@ -1,26 +1,26 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Config;
 
 trait ConfigConsumer {
 
 	/**
-	 * @var Config
+	 * @var VO
 	 */
 	protected $oConfig;
 
 	/**
-	 * @return Config
+	 * @return VO
 	 */
 	public function getConfig() {
 		return $this->oConfig;
 	}
 
 	/**
-	 * @param Config $oConfig
+	 * @param VO $oConfig
 	 * @return $this
 	 */
-	public function setConfig( Config $oConfig ) {
+	public function setConfig( VO $oConfig ) {
 		$this->oConfig = $oConfig;
 		return $this;
 	}

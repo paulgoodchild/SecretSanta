@@ -1,6 +1,6 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Components;
 
 class Person {
 
