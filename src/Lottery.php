@@ -81,14 +81,17 @@ class Lottery {
 	 */
 	public function getEveryone() {
 		if ( !isset( $this->aEveryone ) ) {
-
-			$aExclusions = $this->getConfig()->getExclusionSets();
+			$oConfig = $this->getConfig();
 
 			$this->aEveryone = array();
-			foreach ( $this->getConfig()->getPeople() as $sPerson ) {
-				$this->aEveryone[ $sPerson ] = new Person( $sPerson );
+			$sUniqueKey = $oConfig->getUniquePersonKey();
+			foreach ( $this->getConfig()->getPeople() as $nKey => $aPerson ) {
+				$aPerson[ 'id' ] = $aPerson[ $sUniqueKey ];
+				$oPerson = new Person( $aPerson );
+				$this->aEveryone[ $oPerson->getId() ] = $oPerson;
 			}
 
+			$aExclusions = $oConfig->getExclusionSets();
 			foreach ( $this->aEveryone as $oPerson ) {
 				$oPerson
 					->setPotentialReceivers( $this->aEveryone )

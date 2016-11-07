@@ -16,7 +16,7 @@ $oResult = ( new \Apto\Fun\SecretSanta\Verify() )
 	->run( $aPeople );
 
 if ( $oResult->success && $oConfig->getIfPrint() ) {
-	( new \Apto\Fun\SecretSanta\Printer() )->run( $aPeople );
+	( new \Apto\Fun\SecretSanta\Components\Printer() )->run( $aPeople );
 }
 else {
 	echo '<h1>FAILED</h1>';

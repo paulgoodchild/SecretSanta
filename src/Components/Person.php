@@ -5,9 +5,9 @@ namespace Apto\Fun\SecretSanta\Components;
 class Person {
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	protected $sId;
+	protected $aInfo;
 
 	/**
 	 * @var Person[]
@@ -27,10 +27,10 @@ class Person {
 	protected $aFinalGivers;
 
 	/**
-	 * @param string $sId
+	 * @param array $aInfo
 	 */
-	public function __construct( string $sId ) {
-		$this->sId = $sId;
+	public function __construct( array $aInfo ) {
+		$this->aInfo = $aInfo;
 	}
 
 	/**
@@ -52,7 +52,21 @@ class Person {
 	 * @return string
 	 */
 	public function getId() {
-		return $this->sId;
+		return $this->getInfo()[ 'id' ];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->getInfo()[ 'name' ];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEmail() {
+		return $this->getInfo()[ 'email' ];
 	}
 
 	/**
@@ -181,5 +195,12 @@ class Person {
 
 	public function __toString() {
 		return $this->getId();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getInfo() {
+		return $this->aInfo;
 	}
 }

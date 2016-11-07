@@ -68,6 +68,13 @@ class VO {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getUniquePersonKey() {
+		return $this->getRules()[ 'unique_key' ];
+	}
+
+	/**
 	 * @return array
 	 */
 	protected function getConfig() {
