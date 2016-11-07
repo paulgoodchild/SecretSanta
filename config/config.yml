@@ -4,33 +4,51 @@ rules:
   presents_each: 3
   attempts_limit: 1000
   print: true
+  required_fields:
+    - 'name'
+    - 'email'
+  unique_key: 'email'
 
 people:
-  - "test1@paul"
-  - "test2@paul"
-  - "test3@paul"
-  - "test4@paul"
-  - "test5@paul"
-  - "test6@paul"
-  - "test7@paul"
-  - "test8@paul"
-  - "test9@paul"
-  - "test10@paul"
+  -
+    name: "Test 01"
+    email: "test01@paul.com"
+  -
+    name: "Test 02"
+    email: "test02@paul.com"
+  -
+    name: "Test 03"
+    email: "test03@paul.com"
+  -
+    name: "Test 04"
+    email: "test04@paul.com"
+  -
+    name: "Test 05"
+    email: "test05@paul.com"
+  -
+    name: "Test 06"
+    email: "test06@paul.com"
+  -
+    name: "Test 07"
+    email: "test07@paul.com"
+  -
+    name: "Test 08"
+    email: "test08@paul.com"
 
 exclusion_sets:
   -
-    - "test1@paul"
-    - "test2@paul"
+    - "test01@paul.com"
+    - "test02@paul.com"
   -
-    - "test9@paul"
-    - "test1@paul"
-    - "test3@paul"
+    - "test08@paul.com"
+    - "test01@paul.com"
+    - "test03@paul.com"
   -
-    - "test7@paul"
-    - "test4@paul"
+    - "test07@paul.com"
+    - "test04@paul.com"
   -
-    - "test6@paul"
-    - "test8@paul"
+    - "test06@paul.com"
+    - "test08@paul.com"
   -
-    - "test6@paul"
-    - "test7@paul"
+    - "test06@paul.com"
+    - "test07@paul.com"

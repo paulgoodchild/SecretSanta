@@ -1,6 +1,8 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Components;
+
+use Apto\Fun\SecretSanta\Components\Person;
 
 class Printer {
 

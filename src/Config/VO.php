@@ -1,10 +1,8 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Config;
 
-use Symfony\Component\Yaml\Yaml;
-
-class Config {
+class VO {
 
 	/**
 	 * @var array
@@ -19,7 +17,8 @@ class Config {
 	 * @return int
 	 */
 	public function getAttemptsLimit() {
-		return $this->getRules()[ 'attempts_limit' ];
+		$nLimit = (int)$this->getRules()[ 'attempts_limit' ];
+		return ( $nLimit < 1 ) ? 1000 : $nLimit;
 	}
 
 	/**
@@ -33,7 +32,7 @@ class Config {
 	 * @return array
 	 */
 	public function getExclusionSets() {
-		return $this->getConfig()[ 'exclusion_sets' ];
+		return $this->getRawConfig()[ 'exclusion_sets' ];
 	}
 
 	/**
@@ -47,7 +46,7 @@ class Config {
 	 * @return array
 	 */
 	protected function getRules() {
-		return $this->getConfig()[ 'rules' ];
+		return $this->getRawConfig()[ 'rules' ];
 	}
 
 	/**
@@ -62,7 +61,7 @@ class Config {
 	 * @return string[]
 	 */
 	public function getPeople( $bShuffle = true ) {
-		$aPeople = $this->getConfig()[ 'people' ];
+		$aPeople = $this->getRawConfig()[ 'people' ];
 		if ( $bShuffle ) {
 			shuffle( $aPeople );
 		}
@@ -72,7 +71,36 @@ class Config {
 	/**
 	 * @return array
 	 */
-	protected function getConfig() {
+	public function getRequiredPeopleFields() {
+		return $this->getRules()[ 'required_fields' ];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getUniquePersonKey() {
+		return $this->getRules()[ 'unique_key' ];
+	}
+
+	/**
+	 * Use of this assumes the data has already been verified
+	 *
+	 * @return array
+	 */
+	public function getUniquePersonKeys() {
+		$aPeople = $this->getPeople();
+		$sUniqueKey = $this->getUniquePersonKey();
+		$aAllUniqueKeys = array();
+		foreach ( $aPeople as $nKey => $aPersonInfo ) {
+			$aAllUniqueKeys[] = $aPersonInfo[ $sUniqueKey ];
+		}
+		return $aAllUniqueKeys;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRawConfig() {
 		return $this->aConfig;
 	}
 }

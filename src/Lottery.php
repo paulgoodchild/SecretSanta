@@ -2,7 +2,10 @@
 
 namespace Apto\Fun\SecretSanta;
 
-class Secret {
+use Apto\Fun\SecretSanta\Components\Person;
+use Apto\Fun\SecretSanta\Config\ConfigConsumer;
+
+class Lottery {
 
 	use ConfigConsumer;
 
@@ -18,11 +21,12 @@ class Secret {
 
 	/**
 	 * @return $this
+	 * @throws \Exception
 	 */
 	public function run() {
 		// Verify there are enough remaining potentials for each person
 		if ( !$this->verifyMinimumPresentsPossible() ) {
-			echo 'Impossible: The minimum number of presents can never be met with the given exclusion sets.';
+			throw new \Exception( 'The minimum number of presents can never be met with the given exclusion sets' );
 		}
 		else {
 			$nAttempts = 1;
@@ -78,14 +82,17 @@ class Secret {
 	 */
 	public function getEveryone() {
 		if ( !isset( $this->aEveryone ) ) {
-
-			$aExclusions = $this->getConfig()->getExclusionSets();
+			$oConfig = $this->getConfig();
 
 			$this->aEveryone = array();
-			foreach ( $this->getConfig()->getPeople() as $sPerson ) {
-				$this->aEveryone[ $sPerson ] = new Person( $sPerson );
+			$sUniqueKey = $oConfig->getUniquePersonKey();
+			foreach ( $this->getConfig()->getPeople() as $nKey => $aPerson ) {
+				$aPerson[ 'id' ] = $aPerson[ $sUniqueKey ];
+				$oPerson = new Person( $aPerson );
+				$this->aEveryone[ $oPerson->getId() ] = $oPerson;
 			}
 
+			$aExclusions = $oConfig->getExclusionSets();
 			foreach ( $this->aEveryone as $oPerson ) {
 				$oPerson
 					->setPotentialReceivers( $this->aEveryone )
