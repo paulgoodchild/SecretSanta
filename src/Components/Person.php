@@ -1,13 +1,13 @@
 <?php
 
-namespace Apto\Fun\SecretSanta;
+namespace Apto\Fun\SecretSanta\Components;
 
 class Person {
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	protected $sId;
+	protected $aInfo;
 
 	/**
 	 * @var Person[]
@@ -15,15 +15,22 @@ class Person {
 	protected $aPotentialReceivers;
 
 	/**
+	 * The people TO whom this Person will give gives.
 	 * @var Person[]
 	 */
 	protected $aFinalReceivers;
 
 	/**
-	 * @param string $sId
+	 * The people FROM whom this Person will give gives.
+	 * @var Person[]
 	 */
-	public function __construct( string $sId ) {
-		$this->sId = $sId;
+	protected $aFinalGivers;
+
+	/**
+	 * @param array $aInfo
+	 */
+	public function __construct( array $aInfo ) {
+		$this->aInfo = $aInfo;
 	}
 
 	/**
@@ -45,7 +52,31 @@ class Person {
 	 * @return string
 	 */
 	public function getId() {
-		return $this->sId;
+		return $this->getInfo()[ 'id' ];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->getInfo()[ 'name' ];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEmail() {
+		return $this->getInfo()[ 'email' ];
+	}
+
+	/**
+	 * @return Person[]
+	 */
+	public function getFinalGivers(): array {
+		if ( !isset( $this->aFinalGivers ) ) {
+			$this->aFinalGivers = array();
+		}
+		return $this->aFinalGivers;
 	}
 
 	/**
@@ -83,14 +114,45 @@ class Person {
 	}
 
 	/**
+	 *
+	 * @return int
+	 */
+	public function getReceiveCount(): int {
+		return count( $this->getFinalGivers() );
+	}
+
+	/**
+	 * Note: Can also assign the Giver to the Receiver.
+	 *
 	 * @param Person $oReceiver
 	 * @return Person
 	 */
-	public function setFinalReceiver( Person $oReceiver ) {
+	public function assignReceiver( Person $oReceiver, $bSetConverse = false ) {
+		if ( $bSetConverse ) {
+			$oReceiver->assignGiver( $this, false );
+		}
+
 		$aReceivers = $this->getFinalReceivers();
 		$aReceivers[] = $oReceiver;
 		$this->aFinalReceivers = $aReceivers;
 		return $this->removePotentialReceiver( $oReceiver );
+	}
+
+	/**
+	 * Note: Can also assign the Receiver to the Giver.
+	 *
+	 * @param Person $oGiver
+	 * @param bool   $bSetConverse
+	 * @return $this
+	 */
+	public function assignGiver( Person $oGiver, $bSetConverse = false ) {
+		if ( $bSetConverse ) {
+			$oGiver->assignReceiver( $this, false );
+		}
+		$aGivers = $this->getFinalGivers();
+		$aGivers[] = $oGiver;
+		$this->aFinalGivers = $aGivers;
+		return $this;
 	}
 
 	/**
@@ -133,5 +195,12 @@ class Person {
 
 	public function __toString() {
 		return $this->getId();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getInfo() {
+		return $this->aInfo;
 	}
 }

@@ -1,5 +1,8 @@
 {
   "name": "apto/fun/secretsanta",
+  "type": "library",
+  "description": "Customizable Secret Santa (PHP)",
+  "license": "MIT",
   "authors": [
     {
       "name": "Paul Goodchild",
@@ -7,6 +10,7 @@
     }
   ],
   "require": {
+    "php": ">=7.0",
     "symfony/yaml" : "~3.0"
   },
   "require-dev": {

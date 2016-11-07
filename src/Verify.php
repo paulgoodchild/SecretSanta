@@ -2,6 +2,9 @@
 
 namespace Apto\Fun\SecretSanta;
 
+use Apto\Fun\SecretSanta\Components\Person;
+use Apto\Fun\SecretSanta\Config\ConfigConsumer;
+
 class Verify {
 
 	use ConfigConsumer;
@@ -35,13 +38,13 @@ class Verify {
 			$oResult->message = 'The Final matches is empty';
 		}
 
-		if ( count( $oConfig->getPeople() ) != count( $aPersonPresentCount ) ) {
+		if ( count( $oConfig->getUniquePersonKeys() ) != count( $aPersonPresentCount ) ) {
 			$oResult->success = false;
-			$oResult->message = sprintf( 'The total person present count (%s) does not equal that of the configuration', count( $aPersonPresentCount ) );
+			$oResult->message = sprintf( 'The total person presents count (%s) does not equal that of the configuration', count( $aPersonPresentCount ) );
 		}
 
 		if ( $oResult->success ) {
-			foreach ( $oConfig->getPeople() as $sPerson ) {
+			foreach ( $oConfig->getUniquePersonKeys() as $sPerson ) {
 				if ( !isset( $aPersonPresentCount[$sPerson]) ) {
 					$oResult->success = false;
 					$oResult->message = sprintf( 'ERROR: USER %s does not have any presents assigned', $sPerson );
