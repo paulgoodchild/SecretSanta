@@ -15,12 +15,12 @@ class Verify {
 
 		// ensure raw config items
 		$this->config();
-		// ensure presents > 0
-		$this->presents();
 		// verify people
 		$this->people();
 		// verify exclusions
 		$this->exclusions();
+		// ensure presents > 0
+		$this->presents();
 	}
 
 	protected function config() {
@@ -39,12 +39,18 @@ class Verify {
 	}
 
 	protected function presents() {
-		$nNumberOfPresents = $this->getConfig()->getNumberOfPresentsEach();
+		$oConfig = $this->getConfig();
+		$nNumberOfPresents = $oConfig->getNumberOfPresentsEach();
 		if ( !is_numeric( $nNumberOfPresents ) ) {
 			throw new \Exception( sprintf( 'Number of presents each "%s" is not a number', $nNumberOfPresents ) );
 		}
 		if ( (int)$nNumberOfPresents < 1 ) {
 			throw new \Exception( sprintf( 'Number of presents each "%s" is less than 1', $nNumberOfPresents ) );
+		}
+
+		$nNumberOfPeople = count( $oConfig->getUniquePersonKeys() );
+		if ( $nNumberOfPresents > $nNumberOfPeople ) {
+			throw new \Exception( sprintf( 'Number of presents each (%s) exceeds the number of people (%s)', $nNumberOfPresents, $nNumberOfPeople ) );
 		}
 	}
 
