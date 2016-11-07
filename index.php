@@ -6,6 +6,18 @@ $sPathToConfig = __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR 
 $aConfig = ( new \Symfony\Component\Yaml\Yaml() )->parse( file_get_contents( $sPathToConfig ) );
 $oConfig = new \Apto\Fun\SecretSanta\Config\VO( $aConfig );
 
+$oConfigVerify = new \Apto\Fun\SecretSanta\Config\Verify();
+try {
+	$oConfigVerify
+		->setConfig( $oConfig )
+		->run();
+}
+catch( Exception $oE ) {
+	echo '<h1>FAILED</h1>';
+	echo sprintf( '<h3>%s</h3>', $oE->getMessage() );
+	return;
+}
+
 $aPeople = ( new \Apto\Fun\SecretSanta\Lottery() )
 	->setConfig( $oConfig )
 	->run()
