@@ -7,26 +7,6 @@ class Secret {
 	use ConfigConsumer;
 
 	/**
-	 * @var []
-	 */
-	protected $aBaselinePotentialMatches;
-
-	/**
-	 * @var []
-	 */
-	protected $aFinalPeopleMatches;
-
-	/**
-	 * @var []
-	 */
-	protected $aCountPresentsForReceivers;
-
-	/**
-	 * @var []
-	 */
-	protected $aCountPresentsForGivers;
-
-	/**
 	 * @var Person[]
 	 */
 	protected $aEveryone;
@@ -68,10 +48,10 @@ class Secret {
 
 			$oNextGiver = $this->findNextPersonToBeGiver();
 			$oNextReceiver = $this->pickRandomReceiverFromGiverPotentials( $oNextGiver );
-			$this->assignReceiverToGiver( $oNextGiver, $oNextReceiver );
+			$oNextGiver->assignReceiver( $oNextReceiver, true );
 
 			if ( $this->getIfGiverHasReachedAssignmentLimit( $oNextGiver ) ) {
-				$this->removeGiverFromFutureAssignments( $oNextGiver );
+				$this->removeGiverFromPool( $oNextGiver );
 			}
 
 			if ( $this->getIfReceiverHasReachedAssignmentLimit( $oNextReceiver ) ) {
@@ -82,19 +62,6 @@ class Secret {
 			$nRunningTotalPresents++;
 //			var_dump( 'Current total presents: '.$nRunningTotalPresents );
 		}
-	}
-
-	/**
-	 * @param string $sGiver
-	 * @param string $sReceiver
-	 * @return $this
-	 */
-	protected function removeReceiverFromGiverPotentials( $sGiver, $sReceiver ) {
-		$nKey = array_search( $sReceiver, $this->aBaselinePotentialMatches[ $sGiver ] );
-		if ( $nKey !== false ) {
-			unset( $this->aBaselinePotentialMatches[ $sGiver ][ $nKey ] );
-		}
-		return $this;
 	}
 
 	/**
@@ -111,25 +78,18 @@ class Secret {
 	 */
 	public function getEveryone() {
 		if ( !isset( $this->aEveryone ) ) {
-			$this->aFinalPeopleMatches = array();
-			$this->aCountPresentsForReceivers = array();
-			$this->aCountPresentsForGivers = array();
 
 			$aExclusions = $this->getConfig()->getExclusionSets();
 
 			$this->aEveryone = array();
 			foreach ( $this->getConfig()->getPeople() as $sPerson ) {
-				$this->aEveryone[ $sPerson ] = ( new Person( $sPerson ) );
+				$this->aEveryone[ $sPerson ] = new Person( $sPerson );
 			}
 
 			foreach ( $this->aEveryone as $oPerson ) {
 				$oPerson
 					->setPotentialReceivers( $this->aEveryone )
 					->processExclusions( $aExclusions );
-
-				$this->aCountPresentsForReceivers[ $oPerson->getId() ] = 0;
-				$this->aCountPresentsForGivers[ $oPerson->getId() ] = 0;
-
 			}
 			$this->aWorkingGiversPool = $this->aEveryone;
 		}
@@ -148,22 +108,6 @@ class Secret {
 
 	/**
 	 * @param Person $oGiver
-	 * @param Person $oReceiver
-	 * @throws \Exception
-	 */
-	protected function assignReceiverToGiver( Person $oGiver, Person $oReceiver ) {
-		$this->aCountPresentsForReceivers[ $oReceiver->getId() ]++;
-		$this->aCountPresentsForGivers[ $oGiver->getId() ]++;
-		$oGiver->setFinalReceiver( $oReceiver );
-//		if ( !in_array( $oReceiver->getId(), $this->aFinalPeopleMatches[ $oGiver->getId() ] ) ) {
-//		}
-//		else {
-//			throw new \Exception( 'Should not be possible to assign a receiver to a giver more than once!' );
-//		}
-	}
-
-	/**
-	 * @param Person $oGiver
 	 * @return bool
 	 */
 	protected function getIfGiverHasReachedAssignmentLimit( Person $oGiver ) {
@@ -174,7 +118,7 @@ class Secret {
 	 * @param Person $oGiver
 	 * @return $this
 	 */
-	protected function removeGiverFromFutureAssignments( Person $oGiver ) {
+	protected function removeGiverFromPool( Person $oGiver ) {
 		unset( $this->aWorkingGiversPool[ $oGiver->getId() ] );
 		return $this;
 	}
@@ -184,7 +128,7 @@ class Secret {
 	 * @return bool
 	 */
 	protected function getIfReceiverHasReachedAssignmentLimit( Person $oReceiver ) {
-		return ( $this->aCountPresentsForReceivers[ $oReceiver->getId() ] == $this->getConfig()->getNumberOfPresentsEach() );
+		return ( $oReceiver->getReceiveCount() == $this->getConfig()->getNumberOfPresentsEach() );
 	}
 
 	/**
@@ -192,13 +136,16 @@ class Secret {
 	 * @return $this
 	 */
 	protected function removeReceiverFromAllPotentials( Person $oReceiver ) {
-		foreach( $this->getEveryone() as $sGiver => $oPerson ) {
+		foreach( $this->getWorkingGiversPool() as $sGiver => $oPerson ) {
 			$oPerson->removePotentialReceiver( $oReceiver );
 		}
 		return $this;
 	}
 
 	/**
+	 * Selects a person who has the lowest, or one of the lowest, selection of potential matches. It reduces the chances
+	 * slightly of dead-ends later on.
+	 *
 	 * @return Person
 	 * @throws \Exception
 	 */

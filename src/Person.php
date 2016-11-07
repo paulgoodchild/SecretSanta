@@ -15,9 +15,16 @@ class Person {
 	protected $aPotentialReceivers;
 
 	/**
+	 * The people TO whom this Person will give gives.
 	 * @var Person[]
 	 */
 	protected $aFinalReceivers;
+
+	/**
+	 * The people FROM whom this Person will give gives.
+	 * @var Person[]
+	 */
+	protected $aFinalGivers;
 
 	/**
 	 * @param string $sId
@@ -46,6 +53,16 @@ class Person {
 	 */
 	public function getId() {
 		return $this->sId;
+	}
+
+	/**
+	 * @return Person[]
+	 */
+	public function getFinalGivers(): array {
+		if ( !isset( $this->aFinalGivers ) ) {
+			$this->aFinalGivers = array();
+		}
+		return $this->aFinalGivers;
 	}
 
 	/**
@@ -83,14 +100,45 @@ class Person {
 	}
 
 	/**
+	 *
+	 * @return int
+	 */
+	public function getReceiveCount(): int {
+		return count( $this->getFinalGivers() );
+	}
+
+	/**
+	 * Note: Can also assign the Giver to the Receiver.
+	 *
 	 * @param Person $oReceiver
 	 * @return Person
 	 */
-	public function setFinalReceiver( Person $oReceiver ) {
+	public function assignReceiver( Person $oReceiver, $bSetConverse = false ) {
+		if ( $bSetConverse ) {
+			$oReceiver->assignGiver( $this, false );
+		}
+
 		$aReceivers = $this->getFinalReceivers();
 		$aReceivers[] = $oReceiver;
 		$this->aFinalReceivers = $aReceivers;
 		return $this->removePotentialReceiver( $oReceiver );
+	}
+
+	/**
+	 * Note: Can also assign the Receiver to the Giver.
+	 *
+	 * @param Person $oGiver
+	 * @param bool   $bSetConverse
+	 * @return $this
+	 */
+	public function assignGiver( Person $oGiver, $bSetConverse = false ) {
+		if ( $bSetConverse ) {
+			$oGiver->assignReceiver( $this, false );
+		}
+		$aGivers = $this->getFinalGivers();
+		$aGivers[] = $oGiver;
+		$this->aFinalGivers = $aGivers;
+		return $this;
 	}
 
 	/**
