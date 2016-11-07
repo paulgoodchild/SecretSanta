@@ -11,17 +11,17 @@ try {
 	$oConfigVerify
 		->setConfig( $oConfig )
 		->run();
+
+	$aPeople = ( new \Apto\Fun\SecretSanta\Lottery() )
+		->setConfig( $oConfig )
+		->run()
+		->getEveryone();
 }
 catch( Exception $oE ) {
 	echo '<h1>FAILED</h1>';
 	echo sprintf( '<h3>%s</h3>', $oE->getMessage() );
 	return;
 }
-
-$aPeople = ( new \Apto\Fun\SecretSanta\Lottery() )
-	->setConfig( $oConfig )
-	->run()
-	->getEveryone();
 
 $oResult = ( new \Apto\Fun\SecretSanta\Verify() )
 	->setConfig( $oConfig )

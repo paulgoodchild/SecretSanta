@@ -21,11 +21,12 @@ class Lottery {
 
 	/**
 	 * @return $this
+	 * @throws \Exception
 	 */
 	public function run() {
 		// Verify there are enough remaining potentials for each person
 		if ( !$this->verifyMinimumPresentsPossible() ) {
-			echo 'Impossible: The minimum number of presents can never be met with the given exclusion sets.';
+			throw new \Exception( 'The minimum number of presents can never be met with the given exclusion sets' );
 		}
 		else {
 			$nAttempts = 1;
