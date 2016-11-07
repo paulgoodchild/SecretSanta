@@ -1,4 +1,5 @@
-<?php
+<?php declare( strict_types=1 );
+
 
 require( __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
 
@@ -27,8 +28,10 @@ $oResult = ( new \Apto\Fun\SecretSanta\Verify() )
 	->setConfig( $oConfig )
 	->run( $aPeople );
 
-if ( $oResult->success && $oConfig->getIfPrint() ) {
-	( new \Apto\Fun\SecretSanta\Components\Printer() )->run( $aPeople );
+if ( $oResult->success ) {
+	if ( $oConfig->getIfPrint() ) {
+		( new \Apto\Fun\SecretSanta\Components\Printer() )->run( $aPeople );
+	}
 }
 else {
 	echo '<h1>FAILED</h1>';
